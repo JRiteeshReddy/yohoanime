@@ -138,40 +138,6 @@
   font-family: 'Inter', sans-serif;
 }
 
-.join-icon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  color: #FFFFFF;
-  transition: all 0.25s ease;
-  text-decoration: none;
-}
-
-.reddit-btn {
-  background: #FF4500;
-}
-
-.reddit-btn:hover {
-  background: #e63e00;
-  transform: scale(1.1);
-}
-
-.discord-btn {
-  background: #5865F2;
-}
-
-.discord-btn:hover {
-  background: #4752c4;
-  transform: scale(1.1);
-}
-
-.social-svg {
-  display: block;
-}
-
 /* Footer Links */
 .footer-links {
   display: flex;
@@ -194,18 +160,11 @@
   text-decoration: underline;
 }
 
-/* Copyright & Disclaimer */
+/* Disclaimer */
 .footer-meta-section {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.copyright-text {
-  font-size: 0.78rem;
-  color: var(--primary-color);
-  margin-bottom: 4px;
-  font-weight: 600;
 }
 
 .disclaimer-text {
