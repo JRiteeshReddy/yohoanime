@@ -62,7 +62,7 @@
     padding: 65px 8px 16px;
   }
   .anime-grid {
-    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 8px;
   }
   .anime-section h2 {
@@ -70,4 +70,5 @@
     margin-bottom: 10px;
   }
 }
+
 

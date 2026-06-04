@@ -154,3 +154,48 @@
   width: 24px;
   border-radius: 4px;
 }
+
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 300px;
+    margin-bottom: 24px;
+  }
+  .hero-content {
+    max-width: 100%;
+    padding: 24px;
+  }
+  .hero-title {
+    font-size: 2rem;
+  }
+  .hero-pagination {
+    left: 24px;
+    bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-slider {
+    height: 250px;
+    margin-bottom: 16px;
+  }
+  .hero-content {
+    padding: 16px;
+    gap: 12px;
+  }
+  .hero-title {
+    font-size: 1.5rem;
+  }
+  .hero-desc {
+    -webkit-line-clamp: 2;
+    font-size: 0.85rem;
+  }
+  .hero-pagination {
+    left: 16px;
+    bottom: 12px;
+  }
+  .play-btn {
+    padding: 8px 20px;
+    font-size: 0.8rem;
+  }
+}
+

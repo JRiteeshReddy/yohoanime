@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search as SearchIcon, Menu } from 'lucide-react';
+import { Search as SearchIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SearchSuggestions } from './SearchSuggestions';
 import './Navbar.css';
@@ -48,9 +48,6 @@ export const Navbar = () => {
             onSelect={handleSelect}
           />
         </div>
-        <button className="menu-btn">
-          <Menu size={24} />
-        </button>
       </div>
     </nav>
   );

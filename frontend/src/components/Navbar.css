@@ -68,18 +68,17 @@
   font-size: 0.95rem;
 }
 
-.menu-btn {
-  background: transparent;
-  border: none;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 @media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 16px;
+    gap: 16px;
+  }
   .search-bar {
-    display: none;
+    width: 100%;
+    max-width: 100%;
+  }
+  .search-bar:focus-within {
+    width: 100%;
   }
 }
+
