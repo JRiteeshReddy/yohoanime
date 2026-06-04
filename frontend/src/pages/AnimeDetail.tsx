@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getAnimeDetails, getEpisodes } from '../api';
 import { Footer } from '../components/Footer';
+import { getDisplayName } from '../utils/animeName';
 import './AnimeDetail.css';
 
 import { Loader, ErrorScreen } from '../components/PageState';
@@ -48,13 +49,19 @@ export const AnimeDetail = () => {
   if (loading) return <Loader />;
   if (error || !anime) return <ErrorScreen message={error || "Anime not found."} onRetry={loadData} />;
 
+  const displayName = getDisplayName({
+    id: anime.id || id,
+    name: anime.name || anime.info?.name,
+    jname: anime.jname || anime.info?.jname || anime.info?.japanese || anime.japanese
+  });
+
   return (
     <>
       <div className="anime-detail-page">
         <div className="anime-detail-header glass">
           <img 
             src={anime.poster || anime.info?.poster} 
-            alt={anime.name || anime.info?.name} 
+            alt={displayName} 
             className="anime-detail-poster" 
             onError={(e) => {
               e.currentTarget.onerror = null;
@@ -62,7 +69,7 @@ export const AnimeDetail = () => {
             }}
           />
           <div className="anime-detail-info">
-            <h1>{anime.name || anime.info?.name}</h1>
+            <h1>{displayName}</h1>
             <p className="anime-detail-desc">{anime.description || anime.info?.description}</p>
           </div>
         </div>

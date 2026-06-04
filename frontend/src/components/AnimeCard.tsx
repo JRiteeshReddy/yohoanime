@@ -1,6 +1,6 @@
 import React from 'react';
 import { Play } from 'lucide-react';
-import './AnimeCard.css';
+import { getDisplayName } from '../utils/animeName';
 
 interface AnimeCardProps {
   id: string;
@@ -11,12 +11,13 @@ interface AnimeCardProps {
 }
 
 export const AnimeCard: React.FC<AnimeCardProps> = ({ id, title, image, type, episodes }) => {
+  const displayName = getDisplayName({ id, name: title });
   return (
     <div className="anime-card glass hover-scale">
       <div className="anime-card-image-wrapper">
         <img 
           src={image} 
-          alt={title} 
+          alt={displayName} 
           className="anime-card-image" 
           loading="lazy" 
           onError={(e) => {
@@ -42,7 +43,7 @@ export const AnimeCard: React.FC<AnimeCardProps> = ({ id, title, image, type, ep
         </div>
       </div>
       <div className="anime-card-content">
-        <h3 className="anime-card-title">{title}</h3>
+        <h3 className="anime-card-title">{displayName}</h3>
       </div>
     </div>
   );

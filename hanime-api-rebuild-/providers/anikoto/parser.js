@@ -59,17 +59,39 @@ function parseEpisodes($, ctx) {
   };
 }
 
+// Derive a readable English name from the URL slug ID
+// e.g. "solo-leveling-season-2-arise-from-the-shadow-3eukp" => "Solo Leveling Season 2 Arise from the Shadow"
+function englishNameFromSlug(id) {
+  if (!id) return null;
+  // Remove trailing random hash (typically 5 alphanumeric chars after last hyphen)
+  let slug = id.replace(/-[a-z0-9]{4,6}$/, '');
+  // Replace hyphens with spaces and title-case
+  const smallWords = new Set(['a','an','the','and','but','or','for','nor','on','at','to','from','by','in','of','up','as','is','it','no','so','vs','via','with']);
+  return slug
+    .split('-')
+    .map((word, i) => {
+      if (i === 0) return word.charAt(0).toUpperCase() + word.slice(1);
+      if (smallWords.has(word)) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(' ');
+}
+
 function parseAitem($, el) {
   const posterLink = $(el).find('.ani.poster a, a.poster').first();
   const href = posterLink.attr('href') || $(el).find('a').first().attr('href');
   const id = extractId(href);
   const tipId = extractTipId($, el);
   const nameEl = $(el).find('.name.d-title');
+  const textName = nameEl.text().trim() || '';
+  const jpName = nameEl.attr('data-jp') || null;
+  // Use English name from slug when text and data-jp are the same (both Japanese)
+  const displayName = (textName && jpName && textName === jpName) ? (englishNameFromSlug(id) || textName) : (textName || jpName || '');
   return {
     id,
     tipId,
-    name: nameEl.text().trim() || nameEl.attr('data-jp') || '',
-    jname: nameEl.attr('data-jp') || null,
+    name: displayName,
+    jname: jpName,
     poster: $(el).find('img').attr('src'),
     type: $(el).find('.meta .right').first().text().trim() || null,
     episodes: parseEpisodes($, el),
@@ -183,67 +205,107 @@ export function parseNavMenu(html, providerName = 'anikoto') {
 export function parseHome(html) {
   const $ = load(html);
   const genres = parseGenreList($);
-  const spotlightAnimes = each($, '#hotest .swiper-wrapper .swiper-slide.item', (el, i) => ({
-    id: extractId($(el).find('a.btn.play').attr('href')),
-    name: $(el).find('.title.d-title').text().trim() || null,
-    jname: $(el).find('.title.d-title').attr('data-jp') || null,
-    poster: $(el).find('.image div').attr('style')?.match(/url\(['"]?([^)'"]+)['"]?\)/)?.[1] || null,
-    description: $(el).find('.synopsis').text().trim() || null,
-    rating: $(el).find('.meta i.rating').text().trim() || null,
-    rank: i + 1,
-    otherInfo: [$(el).find('.meta i.quality').text().trim(), $(el).find('.meta i.date').text().trim()].filter(Boolean),
-    genres: [],
-    episodes: { sub: $(el).find('.meta i.sub').length ? 1 : null, dub: $(el).find('.meta i.dub').length ? 1 : null },
-  }));
-  const latestEpisodeAnimes = each($, '#recent-update .ani.items .item', (el) => ({
-    id: extractId($(el).find('.ani.poster a').attr('href')),
-    tipId: extractTipId($, el),
-    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
-    jname: $(el).find('.name.d-title').attr('data-jp') || null,
-    poster: $(el).find('img').attr('src'),
-    type: $(el).find('.meta .right').first().text().trim() || null,
-    episodes: parseEpisodes($, el),
-  }));
-  const newReleases = each($, '.top-tables section[data-name="new-release"] .scaff.items a.item', (el) => ({
-    id: extractId(el.attr('href')),
-    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
-    jname: $(el).find('.name.d-title').attr('data-jp') || null,
-    poster: $(el).find('img').attr('src'),
-    type: null,
-    episodes: parseEpisodes($, el),
-  }));
-  const topUpcomingAnimes = each($, '.top-tables section[data-name="new-added"] .scaff.items a.item', (el) => ({
-    id: extractId(el.attr('href')),
-    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
-    jname: $(el).find('.name.d-title').attr('data-jp') || null,
-    poster: $(el).find('img').attr('src'),
-    type: null,
-    episodes: parseEpisodes($, el),
-  }));
+  const spotlightAnimes = each($, '#hotest .swiper-wrapper .swiper-slide.item', (el, i) => {
+    const spotId = extractId($(el).find('a.btn.play').attr('href'));
+    const spotText = $(el).find('.title.d-title').text().trim() || null;
+    const spotJp = $(el).find('.title.d-title').attr('data-jp') || null;
+    const spotName = (spotText && spotJp && spotText === spotJp) ? (englishNameFromSlug(spotId) || spotText) : (spotText || spotJp);
+    return {
+      id: spotId,
+      name: spotName,
+      jname: spotJp,
+      poster: $(el).find('.image div').attr('style')?.match(/url\(['"]?([^)'"]+)['"]?\)/)?.[1] || null,
+      description: $(el).find('.synopsis').text().trim() || null,
+      rating: $(el).find('.meta i.rating').text().trim() || null,
+      rank: i + 1,
+      otherInfo: [$(el).find('.meta i.quality').text().trim(), $(el).find('.meta i.date').text().trim()].filter(Boolean),
+      genres: [],
+      episodes: { sub: $(el).find('.meta i.sub').length ? 1 : null, dub: $(el).find('.meta i.dub').length ? 1 : null },
+    };
+  });
+  const latestEpisodeAnimes = each($, '#recent-update .ani.items .item', (el) => {
+    const leId = extractId($(el).find('.ani.poster a').attr('href'));
+    const leText = $(el).find('.name.d-title').text().trim() || '';
+    const leJp = $(el).find('.name.d-title').attr('data-jp') || null;
+    const leName = (leText && leJp && leText === leJp) ? (englishNameFromSlug(leId) || leText) : (leText || leJp || null);
+    return {
+      id: leId,
+      tipId: extractTipId($, el),
+      name: leName,
+      jname: leJp,
+      poster: $(el).find('img').attr('src'),
+      type: $(el).find('.meta .right').first().text().trim() || null,
+      episodes: parseEpisodes($, el),
+    };
+  });
+  const newReleases = each($, '.top-tables section[data-name="new-release"] .scaff.items a.item', (el) => {
+    const nrId = extractId(el.attr('href'));
+    const nrText = $(el).find('.name.d-title').text().trim() || '';
+    const nrJp = $(el).find('.name.d-title').attr('data-jp') || null;
+    const nrName = (nrText && nrJp && nrText === nrJp) ? (englishNameFromSlug(nrId) || nrText) : (nrText || nrJp || null);
+    return {
+      id: nrId,
+      name: nrName,
+      jname: nrJp,
+      poster: $(el).find('img').attr('src'),
+      type: null,
+      episodes: parseEpisodes($, el),
+    };
+  });
+  const topUpcomingAnimes = each($, '.top-tables section[data-name="new-added"] .scaff.items a.item', (el) => {
+    const tuId = extractId(el.attr('href'));
+    const tuText = $(el).find('.name.d-title').text().trim() || '';
+    const tuJp = $(el).find('.name.d-title').attr('data-jp') || null;
+    const tuName = (tuText && tuJp && tuText === tuJp) ? (englishNameFromSlug(tuId) || tuText) : (tuText || tuJp || null);
+    return {
+      id: tuId,
+      name: tuName,
+      jname: tuJp,
+      poster: $(el).find('img').attr('src'),
+      type: null,
+      episodes: parseEpisodes($, el),
+    };
+  });
   const today = each($, '.tab-content[data-name="day"] .scaff.side.items a.item', (el) => {
     const rankClass = el.attr('class')?.match(/rank(\d+)/)?.[1];
+    const tdId = extractId(el.attr('href'));
+    const tdText = $(el).find('.name.d-title').text().trim() || '';
+    const tdJp = $(el).find('.name.d-title').attr('data-jp') || null;
+    const tdName = (tdText && tdJp && tdText === tdJp) ? (englishNameFromSlug(tdId) || tdText) : (tdText || tdJp || null);
     return {
-      id: extractId(el.attr('href')),
+      id: tdId,
       rank: rankClass ? parseInt(rankClass, 10) : null,
-      name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
+      name: tdName,
       poster: $(el).find('img').attr('src'),
       episodes: parseEpisodes($, el),
     };
   });
-  const week = each($, '.tab-content[data-name="week"] .scaff.side.items a.item', (el) => ({
-    id: extractId(el.attr('href')),
-    rank: null,
-    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
-    poster: $(el).find('img').attr('src'),
-    episodes: parseEpisodes($, el),
-  }));
-  const month = each($, '.tab-content[data-name="month"] .scaff.side.items a.item', (el) => ({
-    id: extractId(el.attr('href')),
-    rank: null,
-    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
-    poster: $(el).find('img').attr('src'),
-    episodes: parseEpisodes($, el),
-  }));
+  const week = each($, '.tab-content[data-name="week"] .scaff.side.items a.item', (el) => {
+    const wkId = extractId(el.attr('href'));
+    const wkText = $(el).find('.name.d-title').text().trim() || '';
+    const wkJp = $(el).find('.name.d-title').attr('data-jp') || null;
+    const wkName = (wkText && wkJp && wkText === wkJp) ? (englishNameFromSlug(wkId) || wkText) : (wkText || wkJp || null);
+    return {
+      id: wkId,
+      rank: null,
+      name: wkName,
+      poster: $(el).find('img').attr('src'),
+      episodes: parseEpisodes($, el),
+    };
+  });
+  const month = each($, '.tab-content[data-name="month"] .scaff.side.items a.item', (el) => {
+    const moId = extractId(el.attr('href'));
+    const moText = $(el).find('.name.d-title').text().trim() || '';
+    const moJp = $(el).find('.name.d-title').attr('data-jp') || null;
+    const moName = (moText && moJp && moText === moJp) ? (englishNameFromSlug(moId) || moText) : (moText || moJp || null);
+    return {
+      id: moId,
+      rank: null,
+      name: moName,
+      poster: $(el).find('img').attr('src'),
+      episodes: parseEpisodes($, el),
+    };
+  });
   return { 
     genres, 
     spotlightAnimes: spotlightAnimes.filter(a => !isBlockedAnime(a)), 
@@ -311,9 +373,11 @@ export function parseAnime(html) {
   const dataUrl = $('#watch-main').attr('data-url') || '';
   const slugFromUrl = extractId(dataUrl || canonical);
   
-  const name = text($, 'h1.title.d-title') || 
+  const rawName = text($, 'h1.title.d-title') || 
     $('meta[property="og:title"]').attr('content')?.replace(/^Watch\s+/, '').replace(/\s+Episode\s+\d+.*$/i, '').trim() || null;
   const jname = attr($, 'h1.title.d-title', 'data-jp');
+  // If raw name and jname are the same (both Japanese), derive English from slug
+  const name = (rawName && jname && rawName === jname) ? (englishNameFromSlug(slugFromUrl) || rawName) : (rawName || null);
   const poster = attr($, '.poster img[itemprop="image"]', 'src') || $('meta[property="og:image"]').attr('content') || null;
   
   // Synonyms from .names div - all semicolon-separated items
@@ -354,13 +418,17 @@ export function parseAnime(html) {
   // Recommended (last sidebar section)
   const recommended = each($, '.sidebar > section.w-side-section:last-child .scaff.side.items a.item', (el) => {
     const href = el.attr('href');
+    const recId = extractId(href);
     const typeText = $(el).find('.meta span.dot').eq(0).text().trim();
     const epsText = $(el).find('.meta span.dot').eq(1).text().trim();
     const yearText = $(el).find('.meta span.dot').eq(2).text().trim();
+    const recText = $(el).find('.name.d-title').text().trim() || '';
+    const recJp = $(el).find('.name.d-title').attr('data-jp') || null;
+    const recName = (recText && recJp && recText === recJp) ? (englishNameFromSlug(recId) || recText) : (recText || recJp || null);
     return {
-      id: extractId(href),
-      name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
-      jname: $(el).find('.name.d-title').attr('data-jp') || null,
+      id: recId,
+      name: recName,
+      jname: recJp,
       poster: $(el).find('img').attr('src'),
       type: typeText || null,
       duration: null,

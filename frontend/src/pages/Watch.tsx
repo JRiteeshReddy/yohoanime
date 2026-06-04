@@ -6,6 +6,7 @@ import { EpisodeSidebar } from '../components/EpisodeSidebar';
 import { RelatedAnimeSidebar } from '../components/RelatedAnimeSidebar';
 import { Loader, ErrorScreen } from '../components/PageState';
 import { Footer } from '../components/Footer';
+import { getDisplayName } from '../utils/animeName';
 import './Watch.css';
 
 export const Watch = () => {
@@ -244,7 +245,13 @@ export const Watch = () => {
           </div>
 
           <div className="watch-info glass">
-            <h2 style={{color: 'var(--primary-color)'}}>{animeDetails?.anime?.name || id}</h2>
+            <h2 style={{color: 'var(--primary-color)'}}>
+              {animeDetails?.anime ? getDisplayName({
+                id: animeDetails.anime.id || id,
+                name: animeDetails.anime.name,
+                jname: animeDetails.anime.jname || animeDetails.anime.japanese
+              }) : (id ? getDisplayName({ id }) : '')}
+            </h2>
             <p>You are watching <strong>Episode {ep}</strong></p>
             {animeDetails?.anime?.description && (
               <div className="watch-synopsis" style={{ marginTop: '16px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>

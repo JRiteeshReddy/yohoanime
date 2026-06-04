@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getDisplayName } from '../utils/animeName';
 import './TopTenSidebar.css';
 
 export const TopTenSidebar = ({ top10Animes }: { top10Animes: any }) => {
@@ -20,29 +21,32 @@ export const TopTenSidebar = ({ top10Animes }: { top10Animes: any }) => {
         </div>
       </div>
       <div className="top-ten-list">
-        {animes.map((anime: any, idx: number) => (
-          <Link to={`/watch/${anime.id}/1`} key={anime.id} className="top-ten-item hover-scale">
-            <div className={`rank rank-${idx + 1}`}>{idx + 1}</div>
-            <img 
-              src={anime.poster} 
-              alt={anime.name} 
-              className="top-ten-img" 
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = '/images/Icon.png';
-              }}
-            />
-            <div className="top-ten-info">
-              <div className="top-ten-title">{anime.name}</div>
-              <div className="top-ten-meta">
-                {anime.episodes?.sub && <span className="badge sub">CC: {anime.episodes.sub}</span>}
-                {anime.episodes?.dub && <span className="badge dub">Mic: {anime.episodes.dub}</span>}
-                <span className="dot-sep">•</span>
-                <span>TV</span>
+        {animes.map((anime: any, idx: number) => {
+          const displayName = getDisplayName(anime);
+          return (
+            <Link to={`/watch/${anime.id}/1`} key={anime.id} className="top-ten-item hover-scale">
+              <div className={`rank rank-${idx + 1}`}>{idx + 1}</div>
+              <img 
+                src={anime.poster} 
+                alt={displayName} 
+                className="top-ten-img" 
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/images/Icon.png';
+                }}
+              />
+              <div className="top-ten-info">
+                <div className="top-ten-title">{displayName}</div>
+                <div className="top-ten-meta">
+                  {anime.episodes?.sub && <span className="badge sub">CC: {anime.episodes.sub}</span>}
+                  {anime.episodes?.dub && <span className="badge dub">Mic: {anime.episodes.dub}</span>}
+                  <span className="dot-sep">•</span>
+                  <span>TV</span>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { searchAnime } from '../api';
+import { englishNameFromSlug, getDisplayName } from '../utils/animeName';
 import popularAnimes from '../popularAnimes.json';
 import './SearchSuggestions.css';
 
@@ -46,7 +47,13 @@ function getSimilarity(query: string, name: string): number {
 const getFuzzyMatches = (query: string): any[] => {
   if (!query) return [];
   return (popularAnimes as any[])
-    .map((anime: any) => ({ ...anime, similarity: getSimilarity(query, anime.name) }))
+    .map((anime: any) => {
+      // Match against both the stored name and the slug-derived English name
+      const engName = anime.id ? englishNameFromSlug(anime.id) : null;
+      const sim1 = getSimilarity(query, anime.name);
+      const sim2 = engName ? getSimilarity(query, engName) : 0;
+      return { ...anime, similarity: Math.max(sim1, sim2) };
+    })
     .filter((item: any) => item.similarity > 0.45)
     .sort((a: any, b: any) => b.similarity - a.similarity)
     .slice(0, 6);
@@ -114,18 +121,20 @@ export const SearchSuggestions = ({ query, onSelect, visible }: SearchSuggestion
 
   return (
     <div className="suggestions-dropdown">
-      {suggestions.map((anime: any) => (
+      {suggestions.map((anime: any) => {
+        const displayName = getDisplayName(anime);
+        return (
         <button
           key={anime.id || anime.name}
           className="suggestion-item"
           onMouseDown={(e) => {
             e.preventDefault();
-            onSelect(anime.name);
+            onSelect(displayName);
           }}
         >
           <img
             src={anime.poster}
-            alt={anime.name}
+            alt={displayName}
             className="suggestion-poster"
             onError={(e) => {
               e.currentTarget.onerror = null;
@@ -133,11 +142,12 @@ export const SearchSuggestions = ({ query, onSelect, visible }: SearchSuggestion
             }}
           />
           <div className="suggestion-info">
-            <span className="suggestion-name">{anime.name}</span>
+            <span className="suggestion-name">{displayName}</span>
             {anime.type && <span className="suggestion-type">{anime.type}</span>}
           </div>
         </button>
-      ))}
+        );
+      })}
     </div>
   );
 };
