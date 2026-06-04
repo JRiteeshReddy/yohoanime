@@ -5,6 +5,7 @@
   overflow: hidden;
   cursor: pointer;
   height: 100%;
+  min-width: 0;
 }
 
 .anime-card-image-wrapper {
@@ -113,6 +114,7 @@
 .anime-card-content {
   padding: 12px 4px;
   flex-grow: 1;
+  min-width: 0;
 }
 
 .anime-card-title {
@@ -126,6 +128,7 @@
   text-overflow: ellipsis;
   color: #FFFFFF;
   transition: color 0.2s ease;
+  min-width: 0;
 }
 
 .anime-card:hover .anime-card-title {
