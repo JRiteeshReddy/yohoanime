@@ -1,31 +1,35 @@
+/* ── Anime Card: fixed 1:1.414 ratio, no stretch ever ── */
+
 .anime-card {
   display: flex;
   flex-direction: column;
   width: 100%;
-  overflow: hidden;
-  cursor: pointer;
-  height: 100%;
   min-width: 0;
+  cursor: pointer;
 }
 
+/* Lock the image area to exactly 1:1.414 (A4 portrait ratio) */
 .anime-card-image-wrapper {
   position: relative;
   width: 100%;
-  height: 0;
-  padding-top: 140%;
+  aspect-ratio: 1 / 1.414;   /* ← bulletproof: overrides any flex/grid stretch */
   overflow: hidden;
   border-radius: 8px;
+  background-color: var(--surface-color);
   background-image: url('/images/Icon.png');
   background-size: cover;
   background-position: center;
-  background-color: var(--surface-color);
+  flex-shrink: 0;             /* never shrink the image area */
 }
 
 .anime-card-image {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* scale/crop image to fill the fixed ratio box */
+  object-position: center top;
   transition: transform 0.5s ease;
 }
 
@@ -33,16 +37,22 @@
   transform: scale(1.1);
 }
 
+/* Overlay gradient */
 .anime-card-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 10px;
-  background: linear-gradient(to top, rgba(11, 11, 11, 0.95) 0%, rgba(11, 11, 11, 0.4) 60%, rgba(11, 11, 11, 0.1) 100%);
-  opacity: 0.85;
-  transition: opacity 0.3s ease, background 0.3s ease;
+  padding: 8px;
+  background: linear-gradient(
+    to top,
+    rgba(11, 11, 11, 0.95) 0%,
+    rgba(11, 11, 11, 0.4) 55%,
+    rgba(11, 11, 11, 0.05) 100%
+  );
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
 }
 
 .anime-card:hover .anime-card-overlay {
@@ -50,6 +60,7 @@
   background: rgba(11, 11, 11, 0.65);
 }
 
+/* Play button centred inside image */
 .play-btn-overlay {
   position: absolute;
   top: 50%;
@@ -57,8 +68,8 @@
   transform: translate(-50%, -50%) scale(0.7);
   opacity: 0;
   z-index: 2;
-  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
   pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
 }
 
 .anime-card:hover .play-btn-overlay {
@@ -67,84 +78,93 @@
 }
 
 .play-icon-circle {
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--primary-color);
-  color: #000000;
+  color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 15px rgba(255, 165, 0, 0.5);
 }
 
-.play-icon-circle svg {
-  margin-left: 2px;
-}
+.play-icon-circle svg { margin-left: 2px; }
 
+/* Badge row inside overlay */
 .anime-card-info-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  flex-wrap: nowrap;
+  gap: 4px;
 }
 
 .anime-card-badges {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .badge {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 2px 5px;
+  border-radius: 3px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.badge.sub { background: #222222; color: #FFFFFF; border: 1px solid #333333; }
-.badge.dub { background: #222222; color: #FFFFFF; border: 1px solid #333333; }
-.badge.type { 
-  margin-left: auto; 
-  background: var(--secondary-color);
-  color: #000000;
-}
+.badge.sub  { background: #222; color: #fff; border: 1px solid #333; }
+.badge.dub  { background: #222; color: #fff; border: 1px solid #333; }
+.badge.type { background: var(--secondary-color); color: #000; margin-left: auto; }
 
+/* Title below the image */
 .anime-card-content {
-  padding: 12px 4px;
-  flex-grow: 1;
+  padding: 8px 4px 4px;
   min-width: 0;
+  width: 100%;
 }
 
 .anime-card-title {
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   line-height: 1.3;
   font-weight: 600;
+  color: #fff;
+  /* Clamp to 2 lines, then ellipsis — text NEVER expands the card */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #FFFFFF;
-  transition: color 0.2s ease;
+  word-break: break-word;
   min-width: 0;
+  max-width: 100%;
+  transition: color 0.2s ease;
 }
 
 .anime-card:hover .anime-card-title {
   color: var(--primary-color);
 }
 
+/* ── Mobile tweaks ── */
 @media (max-width: 480px) {
   .anime-card-content {
-    padding: 8px 4px;
+    padding: 6px 2px 2px;
   }
   .anime-card-title {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
+    -webkit-line-clamp: 2;
   }
   .badge {
-    font-size: 0.55rem;
-    padding: 2px 4px;
+    font-size: 0.5rem;
+    padding: 1px 3px;
+  }
+  .play-icon-circle {
+    width: 32px;
+    height: 32px;
   }
 }
-

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Play } from 'lucide-react';
 import { getDisplayName } from '../utils/animeName';
+import './AnimeCard.css';
 
 interface AnimeCardProps {
   id: string;
