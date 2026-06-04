@@ -1,0 +1,22 @@
+.search-page {
+  padding: 100px 24px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-title {
+  font-size: 2rem;
+  margin-bottom: 24px;
+  color: #FFFFFF;
+}
+
+.no-results {
+  color: #888888;
+  font-size: 1.1rem;
+}
+
+.anime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}

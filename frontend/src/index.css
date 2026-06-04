@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-color: #0B0B0B;
+  --surface-color: #161616;
+  --surface-hover: #222222;
+  --primary-color: #FFA500;     /* Accent Orange */
+  --primary-hover: #FFB732;
+  --secondary-color: #FFD54F;   /* Soft Gold */
+  --text-main: #FFFFFF;
+  --text-muted: #AAAAAA;
+  --card-color: #161616;
+  --glass-border: #222222;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.glass {
+  background: var(--surface-color);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+.glass-nav {
+  background: rgba(11, 11, 11, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-main);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+a {
+  color: var(--text-main);
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+.hover-scale {
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  border-color: #333333;
+}
+
+.gradient-text {
+  color: var(--text-main);
+}
+
+.button {
+  background: var(--primary-color);
+  color: #000000;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 4px 14px rgba(255, 165, 0, 0.2);
+}
+
+.button:hover {
+  background: var(--primary-hover);
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 8px;
+  border: 2px solid var(--bg-color);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
