@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import './EpisodeSidebar.css';
 
 export const EpisodeSidebar = ({ animeId, episodes, currentEp }: { animeId: string, episodes: any[], currentEp: string }) => {
+  const [searchParams] = useSearchParams();
+  const initialType = searchParams.get('type') === 'dub' ? 'dub' : 'sub';
   const [searchTerm, setSearchTerm] = useState('');
+  const [audioType, setAudioType] = useState<string>(initialType);
 
   const filteredEpisodes = episodes.filter(ep => {
     const epNum = ep.number || ep.episodeId;
@@ -13,7 +16,23 @@ export const EpisodeSidebar = ({ animeId, episodes, currentEp }: { animeId: stri
   return (
     <div className="episode-sidebar glass">
       <div className="eps-header">
-        <h3 style={{ marginBottom: '12px', fontSize: '1.1rem', color: 'var(--text-main)' }}>Episodes List:</h3>
+        <div className="eps-header-top">
+          <h3 style={{ fontSize: '1.1rem', color: 'var(--text-main)', margin: 0 }}>Episodes List:</h3>
+          <div className="sub-dub-toggles">
+            <button 
+              className={`sd-btn ${audioType === 'sub' ? 'active' : ''}`}
+              onClick={() => setAudioType('sub')}
+            >
+              SUB
+            </button>
+            <button 
+              className={`sd-btn ${audioType === 'dub' ? 'active' : ''}`}
+              onClick={() => setAudioType('dub')}
+            >
+              DUB
+            </button>
+          </div>
+        </div>
         <div className="eps-search">
           <input 
             type="text" 
@@ -40,12 +59,16 @@ export const EpisodeSidebar = ({ animeId, episodes, currentEp }: { animeId: stri
 
           return (
             <Link 
-              to={`/watch/${animeId}/${epNum}`} 
+              to={`/watch/${animeId}/${epNum}?type=${audioType}`} 
               key={epNum} 
               className={`ep-list-item ${isActive ? 'active' : ''}`}
             >
               <span className="ep-index">Ep {epNum}{displayTitle ? ':' : ''}</span>
               {displayTitle && <span className="ep-title">{displayTitle}</span>}
+              <div className="ep-badges">
+                {ep.hasSub && <span className="badge sub">SUB</span>}
+                {ep.hasDub && <span className="badge dub">DUB</span>}
+              </div>
             </Link>
           );
         })}

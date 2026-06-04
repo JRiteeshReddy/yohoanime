@@ -285,3 +285,42 @@
     text-align: center;
   }
 }
+
+@media (max-width: 768px) {
+  .landing-card {
+    padding: 24px 16px;
+    gap: 24px;
+  }
+  .landing-logo {
+    max-width: 200px;
+  }
+  .landing-title {
+    font-size: 1.25rem;
+  }
+  .landing-desc {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-card {
+    padding: 20px 12px;
+  }
+  .landing-logo {
+    max-width: 160px;
+  }
+  .landing-title {
+    font-size: 1.15rem;
+  }
+  .landing-desc {
+    font-size: 0.8rem;
+  }
+  .landing-search-input {
+    padding: 12px 12px 12px 40px;
+  }
+  .visit-home-btn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+}
+

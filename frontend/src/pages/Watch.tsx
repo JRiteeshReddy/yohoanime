@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import { getEpisodeSource, getEpisodes, getAnimeDetails } from '../api';
 import { EpisodeSidebar } from '../components/EpisodeSidebar';
@@ -17,7 +17,10 @@ export const Watch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeUrl, setActiveUrl] = useState<string | null>(null);
-  const [activeSourceType, setActiveSourceType] = useState<string>('sub');
+  const [searchParams] = useSearchParams();
+  const initialType = searchParams.get('type') === 'dub' ? 'dub' : 'sub';
+  
+  const [activeSourceType, setActiveSourceType] = useState<string>(initialType);
   const [activeServer, setActiveServer] = useState<string>('Vidstream-1');
 
   const loadData = () => {
@@ -48,7 +51,17 @@ export const Watch = () => {
               setActiveUrl(url);
             } else {
               const sources = epData.sources;
-              if (sources.sub || sources.aniSub) {
+              
+              if (initialType === 'dub' && (sources.dub || sources.aniDub)) {
+                setActiveSourceType('dub');
+                if (sources.dub) {
+                  setActiveServer('Vidstream-1');
+                  setActiveUrl(sources.dub);
+                } else {
+                  setActiveServer('Vidstream-2');
+                  setActiveUrl(sources.aniDub);
+                }
+              } else if (sources.sub || sources.aniSub) {
                 setActiveSourceType('sub');
                 if (sources.sub) {
                   setActiveServer('Vidstream-1');

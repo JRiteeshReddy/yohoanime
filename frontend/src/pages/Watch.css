@@ -166,27 +166,154 @@
 }
 
 @media (max-width: 1200px) {
-  .watch-page-layout { flex-wrap: wrap; }
-  .watch-sidebar-right { width: 100%; }
+  .watch-page-layout {
+    flex-direction: column;
+    gap: 20px;
+    padding: 90px 16px 30px;
+  }
+  .watch-sidebar-left {
+    width: 100%;
+    order: 2; /* Episodes under the player */
+  }
+  .watch-main {
+    width: 100%;
+    order: 1; /* Player at the top */
+    gap: 20px;
+  }
+  .watch-sidebar-right {
+    width: 100%;
+    order: 3; /* Related anime at the bottom */
+  }
 }
-@media (max-width: 900px) {
-  .watch-sidebar-left { width: 100%; }
-}
+
 @media (max-width: 768px) {
+  .watch-page-layout {
+    padding: 80px 12px 20px;
+    gap: 16px;
+  }
+  
+  .watch-main {
+    gap: 16px;
+  }
+
+  .episode-sidebar {
+    height: 380px; /* Shorter on mobile */
+  }
+  
   .server-selector-card {
     flex-direction: column;
     align-items: stretch;
+    padding: 16px;
+    gap: 16px;
   }
+  
   .server-selector-info {
     max-width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--glass-border);
     padding-right: 0;
-    padding-bottom: 16px;
+    padding-bottom: 12px;
   }
+  
+  .server-selector-info p {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  
+  .server-rows {
+    gap: 12px;
+  }
+
   .server-row {
-    flex-direction: column;
-    align-items: flex-start;
+    display: flex;
+    flex-direction: row; /* Horizontal row */
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .server-label {
+    min-width: 65px;
+    font-size: 0.8rem;
+  }
+  
+  .cc-badge, .mic-badge {
+    padding: 1px 4px;
+    font-size: 0.7rem;
+  }
+  
+  .server-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+
+  .watch-controls {
+    padding: 8px 16px;
+  }
+  
+  .control-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .watch-info {
+    padding: 16px;
+  }
+  
+  .watch-info h2 {
+    font-size: 1.3rem;
+  }
+  
+  .watch-synopsis {
+    font-size: 0.85rem;
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .watch-page-layout {
+    padding: 75px 8px 16px;
+    gap: 12px;
+  }
+  
+  .watch-main {
+    gap: 12px;
+  }
+
+  .server-selector-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .server-selector-info h3 {
+    font-size: 1rem;
+  }
+  
+  .server-selector-info p {
+    display: none; /* Hide disclaimer text to save space on small phones */
+  }
+  
+  .server-row {
     gap: 8px;
+  }
+
+  .server-label {
+    min-width: 55px;
+    font-size: 0.75rem;
+  }
+  
+  .server-btn {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+  
+  .control-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .watch-info h2 {
+    font-size: 1.15rem;
   }
 }

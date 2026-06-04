@@ -11,6 +11,37 @@
   background: #0a0a0a;
   border-bottom: 1px solid #222222;
 }
+.eps-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.sub-dub-toggles {
+  display: flex;
+  background: #000;
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid #333;
+}
+.sd-btn {
+  background: transparent;
+  color: #888;
+  border: none;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sd-btn:hover {
+  color: #fff;
+}
+.sd-btn.active {
+  background: var(--primary-color);
+  color: #000;
+}
 .eps-search input {
   width: 100%;
   padding: 8px 12px;
@@ -64,4 +95,44 @@
 }
 .ep-list-item.active .ep-index {
   color: #000000;
+}
+
+.ep-badges {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+.badge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.badge.sub {
+  background: rgba(255, 165, 0, 0.15);
+  color: var(--primary-color);
+}
+.badge.dub {
+  background: rgba(0, 191, 255, 0.15);
+  color: #00bfff;
+}
+
+
+@media (max-width: 768px) {
+  .ep-list-item {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  .eps-header h3 {
+    margin-bottom: 8px !important;
+    font-size: 1.05rem !important;
+  }
+  .eps-search input {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  .eps-list-container {
+    padding: 8px;
+    gap: 3px;
+  }
 }

@@ -129,3 +129,17 @@
 .anime-card:hover .anime-card-title {
   color: var(--primary-color);
 }
+
+@media (max-width: 480px) {
+  .anime-card-content {
+    padding: 8px 4px;
+  }
+  .anime-card-title {
+    font-size: 0.85rem;
+  }
+  .badge {
+    font-size: 0.55rem;
+    padding: 2px 4px;
+  }
+}
+

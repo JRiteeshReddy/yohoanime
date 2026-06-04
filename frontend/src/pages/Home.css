@@ -39,3 +39,35 @@
   .home-layout { flex-direction: column; }
   .home-sidebar { width: 100%; }
 }
+
+@media (max-width: 768px) {
+  .home-page {
+    padding: 70px 12px 20px;
+  }
+  .home-main {
+    gap: 24px;
+  }
+  .anime-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+  }
+  .anime-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page {
+    padding: 65px 8px 16px;
+  }
+  .anime-grid {
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 8px;
+  }
+  .anime-section h2 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+  }
+}
+
