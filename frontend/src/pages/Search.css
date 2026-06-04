@@ -15,4 +15,14 @@
   font-size: 1.1rem;
 }
 
+@media (max-width: 768px) {
+  .search-page {
+    padding: 80px 12px 20px;
+  }
+  .search-title {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+}
+
 

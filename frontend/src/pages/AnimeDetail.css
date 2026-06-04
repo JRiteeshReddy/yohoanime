@@ -81,8 +81,38 @@
 }
 
 @media (max-width: 768px) {
+  .anime-detail-page {
+    padding: 80px 12px 20px;
+  }
   .anime-detail-header {
     flex-direction: column;
     align-items: center;
+    padding: 16px;
+    gap: 16px;
+  }
+  .anime-detail-poster {
+    width: 180px;
+    min-height: 250px;
+  }
+  .anime-detail-info h1 {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  .anime-detail-desc {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+  .anime-episodes {
+    padding: 16px;
+  }
+  .episodes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+  }
+  .episode-card {
+    padding: 8px;
+  }
+  .episode-card .ep-num {
+    font-size: 0.95rem;
   }
 }
