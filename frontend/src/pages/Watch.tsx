@@ -16,6 +16,9 @@ export const Watch = () => {
   const [animeDetails, setAnimeDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeUrl, setActiveUrl] = useState<string | null>(null);
+  const [activeSourceType, setActiveSourceType] = useState<string>('sub');
+  const [activeServer, setActiveServer] = useState<string>('Vidstream-1');
 
   const loadData = () => {
     if (id && ep) {
@@ -36,6 +39,36 @@ export const Watch = () => {
           setSource(srcData);
           setEpisodes(epsData);
           setAnimeDetails(detailsData);
+
+          // Initialize default stream
+          const epData = srcData?.episode || srcData;
+          if (epData && epData.sources) {
+            if (Array.isArray(epData.sources)) {
+              const url = epData.sources.find((s: any) => s.url?.includes('.m3u8'))?.url || epData.sources[0]?.url;
+              setActiveUrl(url);
+            } else {
+              const sources = epData.sources;
+              if (sources.sub || sources.aniSub) {
+                setActiveSourceType('sub');
+                if (sources.sub) {
+                  setActiveServer('Vidstream-1');
+                  setActiveUrl(sources.sub);
+                } else {
+                  setActiveServer('Vidstream-2');
+                  setActiveUrl(sources.aniSub);
+                }
+              } else if (sources.dub || sources.aniDub) {
+                setActiveSourceType('dub');
+                if (sources.dub) {
+                  setActiveServer('Vidstream-1');
+                  setActiveUrl(sources.dub);
+                } else {
+                  setActiveServer('Vidstream-2');
+                  setActiveUrl(sources.aniDub);
+                }
+              }
+            }
+          }
         }
         setLoading(false);
       }).catch(err => {
@@ -55,12 +88,17 @@ export const Watch = () => {
 
   const episodeData = source?.episode || source;
   let videoUrl = null;
-  let iframeUrl = episodeData?.iframe;
+  let iframeUrl = null;
 
-  if (Array.isArray(episodeData?.sources)) {
-    videoUrl = episodeData.sources.find((s: any) => s.url?.includes('.m3u8'))?.url || episodeData.sources[0]?.url;
-  } else if (episodeData?.sources) {
-    iframeUrl = episodeData.sources.sub || episodeData.sources.dub;
+  if (activeUrl) {
+    const isM3u8 = activeUrl.includes('.m3u8') || activeUrl.includes('.mp4');
+    if (isM3u8) {
+      videoUrl = activeUrl;
+    } else {
+      iframeUrl = activeUrl;
+    }
+  } else if (episodeData?.iframe) {
+    iframeUrl = episodeData.iframe;
   }
 
   const related = animeDetails?.related || animeDetails?.recommended || [];
@@ -95,6 +133,85 @@ export const Watch = () => {
               <div className="error">No playable source found.</div>
             )}
           </div>
+
+          {/* Server Selector Card */}
+          {episodeData?.sources && !Array.isArray(episodeData.sources) && (
+            <div className="server-selector-card glass">
+              <div className="server-selector-info">
+                <h3>You're watching <span style={{ color: 'var(--primary-color)' }}>Episode {ep}</span></h3>
+                <p>If current servers doesn't work, please try other servers beside.</p>
+              </div>
+              <div className="server-rows">
+                {(episodeData.sources.sub || episodeData.sources.aniSub) && (
+                  <div className="server-row">
+                    <div className="server-label">
+                      <span className="cc-badge">CC</span> SUB
+                    </div>
+                    <div className="server-buttons">
+                      {episodeData.sources.sub && (
+                        <button
+                          className={`server-btn ${activeSourceType === 'sub' && activeServer === 'Vidstream-1' ? 'active' : ''}`}
+                          onClick={() => {
+                            setActiveSourceType('sub');
+                            setActiveServer('Vidstream-1');
+                            setActiveUrl(episodeData.sources.sub);
+                          }}
+                        >
+                          <span className="play-icon">▶</span> Vidstream-1
+                        </button>
+                      )}
+                      {episodeData.sources.aniSub && (
+                        <button
+                          className={`server-btn ${activeSourceType === 'sub' && activeServer === 'Vidstream-2' ? 'active' : ''}`}
+                          onClick={() => {
+                            setActiveSourceType('sub');
+                            setActiveServer('Vidstream-2');
+                            setActiveUrl(episodeData.sources.aniSub);
+                          }}
+                        >
+                          <span className="play-icon">▶</span> Vidstream-2
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                {(episodeData.sources.dub || episodeData.sources.aniDub) && (
+                  <div className="server-row">
+                    <div className="server-label">
+                      <span className="mic-badge">🎤</span> DUB
+                    </div>
+                    <div className="server-buttons">
+                      {episodeData.sources.dub && (
+                        <button
+                          className={`server-btn ${activeSourceType === 'dub' && activeServer === 'Vidstream-1' ? 'active' : ''}`}
+                          onClick={() => {
+                            setActiveSourceType('dub');
+                            setActiveServer('Vidstream-1');
+                            setActiveUrl(episodeData.sources.dub);
+                          }}
+                        >
+                          <span className="play-icon">▶</span> Vidstream-1
+                        </button>
+                      )}
+                      {episodeData.sources.aniDub && (
+                        <button
+                          className={`server-btn ${activeSourceType === 'dub' && activeServer === 'Vidstream-2' ? 'active' : ''}`}
+                          onClick={() => {
+                            setActiveSourceType('dub');
+                            setActiveServer('Vidstream-2');
+                            setActiveUrl(episodeData.sources.aniDub);
+                          }}
+                        >
+                          <span className="play-icon">▶</span> Vidstream-2
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="watch-controls glass">
             <button 

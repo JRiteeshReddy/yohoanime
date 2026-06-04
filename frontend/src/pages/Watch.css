@@ -59,10 +59,134 @@
   padding: 24px;
 }
 
+/* Server Selector Card Styling */
+.server-selector-card {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 12px;
+  align-items: center;
+}
+
+.server-selector-info {
+  flex: 1;
+  max-width: 35%;
+  border-right: 1px solid var(--glass-border);
+  padding-right: 24px;
+}
+
+.server-selector-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.server-selector-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.server-rows {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.server-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.server-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.cc-badge, .mic-badge {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.server-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.server-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-color);
+  border: 1px solid var(--glass-border);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.server-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 165, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+.server-btn.active {
+  background: var(--primary-color);
+  color: #000000;
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+}
+
+.server-btn.active .play-icon {
+  color: #000000;
+}
+
+.play-icon {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
 @media (max-width: 1200px) {
   .watch-page-layout { flex-wrap: wrap; }
   .watch-sidebar-right { width: 100%; }
 }
 @media (max-width: 900px) {
   .watch-sidebar-left { width: 100%; }
+}
+@media (max-width: 768px) {
+  .server-selector-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .server-selector-info {
+    max-width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border);
+    padding-right: 0;
+    padding-bottom: 16px;
+  }
+  .server-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 }
