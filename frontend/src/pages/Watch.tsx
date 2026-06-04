@@ -140,7 +140,7 @@ export const Watch = () => {
         <main className="watch-main">
           <div className="player-container glass">
             {videoUrl ? (
-              <Player url={videoUrl} controls width="100%" height="100%" playing />
+              <Player url={videoUrl} controls width="100%" height="100%" playing muted={false} volume={1} />
             ) : iframeUrl ? (
               <iframe src={iframeUrl} width="100%" height="100%" allowFullScreen frameBorder="0" sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>
             ) : (
