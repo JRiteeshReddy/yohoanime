@@ -68,7 +68,7 @@ function parseAitem($, el) {
   return {
     id,
     tipId,
-    name: nameEl.attr('data-jp') || nameEl.text().trim() || '',
+    name: nameEl.text().trim() || nameEl.attr('data-jp') || '',
     jname: nameEl.attr('data-jp') || null,
     poster: $(el).find('img').attr('src'),
     type: $(el).find('.meta .right').first().text().trim() || null,
@@ -198,7 +198,7 @@ export function parseHome(html) {
   const latestEpisodeAnimes = each($, '#recent-update .ani.items .item', (el) => ({
     id: extractId($(el).find('.ani.poster a').attr('href')),
     tipId: extractTipId($, el),
-    name: $(el).find('.name.d-title').attr('data-jp') || $(el).find('.name.d-title').text().trim() || null,
+    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
     jname: $(el).find('.name.d-title').attr('data-jp') || null,
     poster: $(el).find('img').attr('src'),
     type: $(el).find('.meta .right').first().text().trim() || null,
@@ -206,7 +206,7 @@ export function parseHome(html) {
   }));
   const newReleases = each($, '.top-tables section[data-name="new-release"] .scaff.items a.item', (el) => ({
     id: extractId(el.attr('href')),
-    name: $(el).find('.name.d-title').attr('data-jp') || $(el).find('.name.d-title').text().trim() || null,
+    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
     jname: $(el).find('.name.d-title').attr('data-jp') || null,
     poster: $(el).find('img').attr('src'),
     type: null,
@@ -214,7 +214,7 @@ export function parseHome(html) {
   }));
   const topUpcomingAnimes = each($, '.top-tables section[data-name="new-added"] .scaff.items a.item', (el) => ({
     id: extractId(el.attr('href')),
-    name: $(el).find('.name.d-title').attr('data-jp') || $(el).find('.name.d-title').text().trim() || null,
+    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
     jname: $(el).find('.name.d-title').attr('data-jp') || null,
     poster: $(el).find('img').attr('src'),
     type: null,
@@ -225,7 +225,7 @@ export function parseHome(html) {
     return {
       id: extractId(el.attr('href')),
       rank: rankClass ? parseInt(rankClass, 10) : null,
-      name: $(el).find('.name.d-title').attr('data-jp') || $(el).find('.name.d-title').text().trim() || null,
+      name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
       poster: $(el).find('img').attr('src'),
       episodes: parseEpisodes($, el),
     };
@@ -233,14 +233,14 @@ export function parseHome(html) {
   const week = each($, '.tab-content[data-name="week"] .scaff.side.items a.item', (el) => ({
     id: extractId(el.attr('href')),
     rank: null,
-    name: $(el).find('.name.d-title').attr('data-jp') || $(el).find('.name.d-title').text().trim() || null,
+    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
     poster: $(el).find('img').attr('src'),
     episodes: parseEpisodes($, el),
   }));
   const month = each($, '.tab-content[data-name="month"] .scaff.side.items a.item', (el) => ({
     id: extractId(el.attr('href')),
     rank: null,
-    name: $(el).find('.name.d-title').attr('data-jp') || $(el).find('.name.d-title').text().trim() || null,
+    name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
     poster: $(el).find('img').attr('src'),
     episodes: parseEpisodes($, el),
   }));
@@ -359,7 +359,7 @@ export function parseAnime(html) {
     const yearText = $(el).find('.meta span.dot').eq(2).text().trim();
     return {
       id: extractId(href),
-      name: $(el).find('.name.d-title').attr('data-jp') || $(el).find('.name.d-title').text().trim() || null,
+      name: $(el).find('.name.d-title').text().trim() || $(el).find('.name.d-title').attr('data-jp') || null,
       jname: $(el).find('.name.d-title').attr('data-jp') || null,
       poster: $(el).find('img').attr('src'),
       type: typeText || null,
