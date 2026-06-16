@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { AnimeCard } from '../components/AnimeCard';
 import { Footer } from '../components/Footer';
 import { searchAnime } from '../api';
+import { getDisplayName, getSearchRelevanceScore } from '../utils/animeName';
 import './Search.css';
 
 import { Loader, ErrorScreen } from '../components/PageState';
@@ -20,7 +21,16 @@ export const Search = () => {
       setError(null);
       searchAnime(query)
         .then((res) => {
-          setResults(res.data?.animes || []);
+          const rawResults = res.data?.animes || [];
+          // Sort results by relevance score
+          const sorted = [...rawResults].sort((a: any, b: any) => {
+            const nameA = getDisplayName(a);
+            const nameB = getDisplayName(b);
+            const scoreA = getSearchRelevanceScore(nameA, query);
+            const scoreB = getSearchRelevanceScore(nameB, query);
+            return scoreB - scoreA;
+          });
+          setResults(sorted);
           setLoading(false);
         })
         .catch((err) => {

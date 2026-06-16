@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { searchAnime } from '../api';
-import { englishNameFromSlug, getDisplayName } from '../utils/animeName';
+import { englishNameFromSlug, getDisplayName, getSearchRelevanceScore } from '../utils/animeName';
 import popularAnimes from '../popularAnimes.json';
 import './SearchSuggestions.css';
 
@@ -75,7 +75,14 @@ const getFuzzyMatches = (query: string): any[] => {
       return { ...anime, similarity: Math.max(sim1, sim2) };
     })
     .filter((item: any) => item.similarity > 0.45)
-    .sort((a: any, b: any) => b.similarity - a.similarity)
+    .sort((a: any, b: any) => {
+      const nameA = getDisplayName(a);
+      const nameB = getDisplayName(b);
+      const scoreA = getSearchRelevanceScore(nameA, query);
+      const scoreB = getSearchRelevanceScore(nameB, query);
+      if (scoreA !== scoreB) return scoreB - scoreA;
+      return b.similarity - a.similarity;
+    })
     .slice(0, 8);
 };
 
@@ -117,7 +124,16 @@ export const SearchSuggestions = ({ query, onSelect, visible }: SearchSuggestion
               }
             }
             
-            setSuggestions(merged.slice(0, 8));
+            // Sort by relevance score
+            const sorted = [...merged].sort((a: any, b: any) => {
+              const nameA = getDisplayName(a);
+              const nameB = getDisplayName(b);
+              const scoreA = getSearchRelevanceScore(nameA, query.trim());
+              const scoreB = getSearchRelevanceScore(nameB, query.trim());
+              return scoreB - scoreA;
+            });
+            
+            setSuggestions(sorted.slice(0, 8));
             setLoading(false);
           })
           .catch(() => {
